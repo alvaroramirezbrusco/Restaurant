@@ -1,4 +1,25 @@
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Custom: mis inyecciones
+builder.Services.AddControllers(options =>
+{
+    //options.Filters.Add<CustomExceptionFilter>();
+    //options.Filters.Add<ValidateSortByPriceFilter>();
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
+builder.Services.AddEndpointsApiExplorer();
+
+//
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
