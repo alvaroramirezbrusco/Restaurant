@@ -20,9 +20,11 @@ namespace Infrastructure.Queries
             return await query.ToListAsync();
         }
 
-        public async Task<Category> GetByIdAsync(int Id, CancellationToken cancellationToken = default)
+        public async Task<Category> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _context.Categories.FindAsync(Id);
+            return await _context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
     }
 }

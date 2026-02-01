@@ -22,18 +22,19 @@ namespace Restaurant.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(DishResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiError), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create([FromBody] DishRequest request)
         {
-            var dish = await _mediator.Send(new CreateDishCommand(request));
-            return CreatedAtAction(nameof(GetById), new { id = dish.Id }, dish); // 201
+            var result = await _mediator.Send(new CreateDishCommand(request));
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result); // 201
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var dish = await _mediator.Send(new GetDishByIdQuery(id));
-            return Ok(dish);
+            var result = await _mediator.Send(new GetDishByIdQuery(id));
+            return Ok(result);
         }
 
         [HttpGet]
@@ -41,8 +42,19 @@ namespace Restaurant.Controllers
         [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] string? name, [FromQuery] int? category, [FromQuery] SortDirection? sortByPrice, [FromQuery] bool onlyActive = true)
         {
-            var dishes = await _mediator.Send(new GetAllDishesQuery(name, category, sortByPrice, onlyActive));
-            return Ok(dishes); // 200
+            var result = await _mediator.Send(new GetAllDishesQuery(name, category, sortByPrice, onlyActive));
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(DishResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Update(Guid id, [FromBody] DishUpdateRequest request)
+        {
+            var result = await _mediator.Send(new UpdateDishCommand(id, request));
+            return Ok(result);
         }
     }
 }

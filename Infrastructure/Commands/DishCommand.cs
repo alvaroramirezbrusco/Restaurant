@@ -13,20 +13,21 @@ namespace Infrastructure.Commands
             _context = context;
         }
 
-        public async Task DeleteAsync(Dish dish, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Dish entity, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public async Task InsertAsync(Dish dish, CancellationToken cancellationToken = default)
+        public async Task InsertAsync(Dish entity, CancellationToken cancellationToken = default)
         {
-            await _context.Dishes.AddAsync(dish, cancellationToken);
+            await _context.Dishes.AddAsync(entity, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(Dish dish, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(Dish entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _context.Dishes.Update(entity);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
