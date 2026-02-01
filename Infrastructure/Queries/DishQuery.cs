@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Query;
 using Application.Models;
+using Domain.Constants;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,33 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
-        public Task<IEnumerable<Dish>> GetAllAsync(string? name, int? categoryId, SortDirection? sortByPrice, bool onlyActive, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Dish>> GetAllAsync(string? Name, int? CategoryId, SortDirection? SortByPrice, bool OnlyActive, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var query = _context.Dishes
+                .Include(dish => dish.CategoryNavigator)
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(Name))
+            {
+                query = query.Where(d => d.Name.Contains(Name));
+            }
+            if (CategoryId.HasValue)
+            {
+                query = query.Where(d => d.Category == CategoryId);
+            }
+            if (OnlyActive)
+            {
+                query = query.Where(d => d.Available);
+            }
+            if (SortByPrice.HasValue)
+            {
+                query = SortByPrice == SortDirection.asc
+                    ? query.OrderBy(d => d.Price)
+                    : query.OrderByDescending(d => d.Price);
+            }
+
+            return await query.ToListAsync(cancellationToken);
         }
 
         public async Task<Dish> GetByNameAsync(string name, CancellationToken cancellationToken = default)

@@ -1,5 +1,6 @@
 ﻿using Application.Features.Dishes.Commands;
 using Application.Features.Dishes.Queries;
+using Application.Models;
 using Application.Models.Requests;
 using Application.Models.Responses;
 using MediatR;
@@ -33,6 +34,15 @@ namespace Restaurant.Controllers
         {
             var dish = await _mediator.Send(new GetDishByIdQuery(id));
             return Ok(dish);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(DishResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAll([FromQuery] string? name, [FromQuery] int? category, [FromQuery] SortDirection? sortByPrice, [FromQuery] bool onlyActive = true)
+        {
+            var dishes = await _mediator.Send(new GetAllDishesQuery(name, category, sortByPrice, onlyActive));
+            return Ok(dishes); // 200
         }
     }
 }
