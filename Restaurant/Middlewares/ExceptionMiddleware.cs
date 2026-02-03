@@ -1,4 +1,5 @@
 ﻿using Application.Exceptions;
+using FluentValidation;
 using System.Net;
 using System.Text.Json;
 
@@ -27,30 +28,57 @@ namespace EventService.API.Middlewares
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception ex, ILogger logger)
+        private static async Task HandleExceptionAsync(
+            HttpContext context,
+            Exception ex,
+            ILogger logger)
         {
             context.Response.ContentType = "application/json";
 
-            var statusCode = ex switch
+            HttpStatusCode statusCode;
+            object response;
+
+            switch (ex)
             {
-                KeyNotFoundException => HttpStatusCode.NotFound,
-                ArgumentException => HttpStatusCode.BadRequest,
-                UnauthorizedAccessException => HttpStatusCode.Unauthorized,
-                ConflictException => HttpStatusCode.Conflict,
-                _ => HttpStatusCode.InternalServerError
-            };
+                case ValidationException validationException:
+                    statusCode = HttpStatusCode.BadRequest;
+
+                    response = new
+                    {
+                        error = validationException.Errors.First().ErrorMessage
+                    };
+                    break;
+
+                case KeyNotFoundException:
+                    statusCode = HttpStatusCode.NotFound;
+                    response = new { error = ex.Message };
+                    break;
+
+                case ArgumentException:
+                    statusCode = HttpStatusCode.BadRequest;
+                    response = new { error = ex.Message };
+                    break;
+
+                case UnauthorizedAccessException:
+                    statusCode = HttpStatusCode.Unauthorized;
+                    response = new { error = ex.Message };
+                    break;
+
+                case ConflictException:
+                    statusCode = HttpStatusCode.Conflict;
+                    response = new { error = ex.Message };
+                    break;
+
+                default:
+                    statusCode = HttpStatusCode.InternalServerError;
+                    response = new { error = "Ocurrió un error inesperado" };
+                    break;
+            }
 
             logger.LogError(ex, "Ocurrió un error: {Message}", ex.Message);
-
-            var response = new
-            {
-                //status = (int)statusCode,
-                error = ex.Message
-            };
 
             context.Response.StatusCode = (int)statusCode;
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }
-
 }

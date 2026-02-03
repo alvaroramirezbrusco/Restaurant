@@ -22,32 +22,7 @@ namespace Application.Features.Dishes.Commands
 
         public async Task<DishResponse> Handle(CreateDishCommand request, CancellationToken cancellationToken)
         {
-            if (request.request.Price <= 0)
-            {
-                throw new ArgumentException("El precio debe ser mayor a cero");
-            }
-
-            if (string.IsNullOrEmpty(request.request.Name))
-            {
-                throw new ArgumentException("El nombre del plato es obligatorio");
-            }
-
-            if (request.request.Category <= 0)
-            {
-                throw new ArgumentException("La categoría es inválida");
-            }
-
-            var existingCategory = await _categoryQuery.GetByIdAsync(request.request.Category);
-            if (existingCategory == null)
-            {
-                throw new KeyNotFoundException("No se encontró la categoría ingresada");
-            }
-
-            var existingDish = await _dishQuery.GetByNameAsync(request.request.Name);
-            if (existingDish != null)
-            {
-                throw new ConflictException("Ya existe un plato con ese nombre");
-            }
+            var category = await _categoryQuery.GetByIdAsync(request.request.Category);
 
             var dish = new Dish
             {
@@ -71,8 +46,8 @@ namespace Application.Features.Dishes.Commands
                 Price = dish.Price,
                 Category = new GenericResponse
                 {
-                    Id = existingCategory.Id,
-                    Name = existingCategory.Name
+                    Id = category.Id,
+                    Name = category.Name
                 },
                 IsActive = dish.Available,
                 Image = dish.ImageUrl,
@@ -80,5 +55,6 @@ namespace Application.Features.Dishes.Commands
                 UpdatedAt = dish.UpdateDate
             };
         }
+
     }
 }
