@@ -16,14 +16,9 @@ namespace Application.Features.Dishes.Queries
 
         public async Task<IReadOnlyList<DishResponse>> Handle(GetAllDishesQuery request, CancellationToken cancellationToken)
         {
-            if (request.categoryId.HasValue && request.categoryId.Value <= 0)
-            {
-                throw new ArgumentException("Parámetros de ordenamiento inválidos");
-            }
-
             var dishes = await _query.GetAllAsync(request.name, request.categoryId, request.sortByPrice, request.onlyActive, cancellationToken);
-            
-            var response = dishes.Select(d => new DishResponse
+
+            return dishes.Select(d => new DishResponse
             {
                 Id = d.DishId,
                 Name = d.Name,
@@ -38,9 +33,7 @@ namespace Application.Features.Dishes.Queries
                 Image = d.ImageUrl,
                 CreatedAt = d.CreateDate,
                 UpdatedAt = d.UpdateDate
-            }).ToList();
-
-            return response;
+            }).ToList(); ;
         }
     }
 }

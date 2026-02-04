@@ -3,7 +3,6 @@ using Application.Interfaces.Command;
 using Application.Interfaces.Query;
 using Application.Models.Responses;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Dishes.Commands
 {
@@ -13,7 +12,10 @@ namespace Application.Features.Dishes.Commands
         private readonly IDishQuery _dishQuery;
         private readonly ICategoryQuery _categoryQuery;
 
-        public UpdateDishHandler(IDishCommand dishCommand, IDishQuery dishQuery, ICategoryQuery categoryQuery)
+        public UpdateDishHandler(
+            IDishCommand dishCommand,
+            IDishQuery dishQuery,
+            ICategoryQuery categoryQuery)
         {
             _dishCommand = dishCommand;
             _dishQuery = dishQuery;
@@ -22,29 +24,14 @@ namespace Application.Features.Dishes.Commands
 
         public async Task<DishResponse> Handle(UpdateDishCommand request, CancellationToken cancellationToken)
         {
-            var existingDish = await _dishQuery.GetByIdAsync(request.id);
+            var existingDish = await _dishQuery.GetByIdAsync(request.id, cancellationToken)
+                ?? throw new KeyNotFoundException("Plato no encontrado");
 
-            if (existingDish == null)
-            {
-                throw new KeyNotFoundException("Plato no encontrado");
-            }
+            var existingCategory = await _categoryQuery.GetByIdAsync(request.request.Category, cancellationToken)
+                ?? throw new KeyNotFoundException("No se encontró la categoría ingresada");
 
-            if (request.request.Price <= 0)
-            {
-                throw new ArgumentException("El precio debe ser mayor a cero");
-            }
-
-            if (string.IsNullOrEmpty(request.request.Name))
-            {
-                throw new ArgumentException("El nombre del plato es obligatorio");
-            }
-            var existingCategory = await _categoryQuery.GetByIdAsync(request.request.Category);
-            if (existingCategory == null)
-            {
-                throw new ArgumentException("La categoría es inválida");
-            }
-            var dish = await _dishQuery.GetByNameAsync(request.request.Name);
-            if (dish != null && dish.DishId != existingDish.DishId)
+            var dishWithSameName = await _dishQuery.ExistsOtherWithNameAsync(request.request.Name, request.id, cancellationToken);
+            if (dishWithSameName)
             {
                 throw new ConflictException("Ya existe un plato con ese nombre");
             }
@@ -57,7 +44,7 @@ namespace Application.Features.Dishes.Commands
             existingDish.Available = request.request.IsActive;
             existingDish.UpdateDate = DateTime.UtcNow;
 
-            await _dishCommand.UpdateAsync(existingDish);
+            await _dishCommand.UpdateAsync(existingDish, cancellationToken);
 
             return new DishResponse
             {

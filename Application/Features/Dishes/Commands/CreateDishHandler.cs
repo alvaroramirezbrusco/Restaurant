@@ -22,7 +22,17 @@ namespace Application.Features.Dishes.Commands
 
         public async Task<DishResponse> Handle(CreateDishCommand request, CancellationToken cancellationToken)
         {
-            var category = await _categoryQuery.GetByIdAsync(request.request.Category);
+            var category = await _categoryQuery.GetByIdAsync(request.request.Category, cancellationToken);
+            if (category == null)
+            {
+                throw new KeyNotFoundException("No se encontró la categoría ingresada");
+            }
+
+            var existingDish = await _dishQuery.ExistsWithNameAsync(request.request.Name, cancellationToken);
+            if (existingDish != null)
+            {
+                throw new ConflictException("Ya existe un plato con ese nombre");
+            }
 
             var dish = new Dish
             {

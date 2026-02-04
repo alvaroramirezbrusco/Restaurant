@@ -45,10 +45,17 @@ namespace Infrastructure.Queries
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<Dish> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<Dish> ExistsWithNameAsync(string name, CancellationToken cancellationToken = default)
         {
             return await _context.Dishes.FirstOrDefaultAsync(d => d.Name == name);
         }
+
+        public async Task<bool> ExistsOtherWithNameAsync(string name, Guid dishId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Dishes
+                .AnyAsync(d => d.Name == name && d.DishId != dishId, cancellationToken);
+        }
+
 
         public async Task<Dish?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
