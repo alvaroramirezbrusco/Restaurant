@@ -2,6 +2,7 @@
 using Application.Interfaces.Command;
 using Application.Interfaces.Query;
 using Application.Models.Responses;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
 
@@ -12,12 +13,18 @@ namespace Application.Features.Dishes.Commands
         private readonly IDishCommand _dishCommand;
         private readonly IDishQuery _dishQuery;
         private readonly ICategoryQuery _categoryQuery;
+        private readonly IMapper _mapper;
 
-        public CreateDishHandler(IDishCommand dishCommand, IDishQuery dishQuery, ICategoryQuery categoryQuery)
+        public CreateDishHandler(
+            IDishCommand dishCommand,
+            IDishQuery dishQuery,
+            ICategoryQuery categoryQuery,
+            IMapper mapper)
         {
             _dishCommand = dishCommand;
             _dishQuery = dishQuery;
             _categoryQuery = categoryQuery;
+            _mapper = mapper;
         }
 
         public async Task<DishResponse> Handle(CreateDishCommand request, CancellationToken cancellationToken)
@@ -34,36 +41,13 @@ namespace Application.Features.Dishes.Commands
                 throw new ConflictException("Ya existe un plato con ese nombre");
             }
 
-            var dish = new Dish
-            {
-                Name = request.request.Name,
-                Description = request.request.Description,
-                Price = request.request.Price,
-                Available = true,
-                Category = request.request.Category,
-                ImageUrl = request.request.Image,
-                CreateDate = DateTime.UtcNow,
-                UpdateDate = DateTime.UtcNow
-            };
+            var dish = _mapper.Map<Dish>(request.request);
 
             await _dishCommand.InsertAsync(dish);
 
-            return new DishResponse
-            {
-                Id = dish.DishId,
-                Name = dish.Name,
-                Description = dish.Description,
-                Price = dish.Price,
-                Category = new GenericResponse
-                {
-                    Id = category.Id,
-                    Name = category.Name
-                },
-                IsActive = dish.Available,
-                Image = dish.ImageUrl,
-                CreatedAt = dish.CreateDate,
-                UpdatedAt = dish.UpdateDate
-            };
+            dish.CategoryNavigator = category;
+
+            return _mapper.Map<DishResponse>(dish);
         }
 
     }

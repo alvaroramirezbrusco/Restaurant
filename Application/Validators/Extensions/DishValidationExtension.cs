@@ -5,6 +5,14 @@ namespace Application.Validators.Extensions
 {
     public static class DishValidationExtensions
     {
+        public static IRuleBuilderOptions<T, Guid> ValidDishId<T>(
+            this IRuleBuilder<T, Guid> rule)
+        {
+            return rule
+                .NotEmpty()
+                .WithMessage("Formato de ID inválido");
+        }
+
         public static IRuleBuilderOptions<T, string> ValidDishName<T>(
             this IRuleBuilder<T, string> rule)
         {

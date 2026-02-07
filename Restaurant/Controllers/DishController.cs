@@ -31,6 +31,9 @@ namespace Restaurant.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(DishResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _mediator.Send(new GetDishByIdQuery(id));

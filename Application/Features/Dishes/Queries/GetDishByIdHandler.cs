@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Query;
 using Application.Models.Responses;
+using AutoMapper;
 using MediatR;
 
 namespace Application.Features.Dishes.Queries
@@ -7,41 +8,25 @@ namespace Application.Features.Dishes.Queries
     public class GetDishByIdHandler : IRequestHandler<GetDishByIdQuery, DishResponse>
     {
         private readonly IDishQuery _dishQuery;
+        private readonly IMapper _mapper;
 
-        public GetDishByIdHandler(IDishQuery dishQuery)
+        public GetDishByIdHandler(
+            IDishQuery dishQuery,
+            IMapper mapper)
         {
             _dishQuery = dishQuery;
+            _mapper = mapper;
         }
 
         public async Task<DishResponse> Handle(GetDishByIdQuery request, CancellationToken cancellationToken)
         {
-            if (request.id == Guid.Empty)
-            {
-                throw new ArgumentException("Formato de ID inválido");
-            }
-
             var dish = await _dishQuery.GetByIdAsync(request.id);
             if (dish == null)
             {
                 throw new KeyNotFoundException("Plato no encontrado");
             }
 
-            return new DishResponse
-            {
-                Id = dish.DishId,
-                Name = dish.Name,
-                Description = dish.Description,
-                Price = dish.Price,
-                Category = new GenericResponse
-                {
-                    Id = dish.CategoryNavigator.Id,
-                    Name = dish.CategoryNavigator.Name
-                },
-                IsActive = dish.Available,
-                Image = dish.ImageUrl,
-                CreatedAt = dish.CreateDate,
-                UpdatedAt = dish.UpdateDate
-            };
+            return _mapper.Map<DishResponse>(dish);
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using Application.Behaviors;
 using FluentValidation;
 using MediatR;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Application.Mappings;
 
 namespace Restaurant.DependencyInjection
 {
@@ -16,6 +19,8 @@ namespace Restaurant.DependencyInjection
             );
 
             services.AddValidatorsFromAssembly(assembly);
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
