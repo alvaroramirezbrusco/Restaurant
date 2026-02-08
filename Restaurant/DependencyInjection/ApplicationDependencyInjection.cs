@@ -1,10 +1,7 @@
 ﻿using Application.Behaviors;
 using FluentValidation;
 using MediatR;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using Application.Mappings;
 
 namespace Restaurant.DependencyInjection
 {

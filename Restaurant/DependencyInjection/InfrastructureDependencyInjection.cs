@@ -19,6 +19,8 @@ namespace Restaurant.DependencyInjection
             services.AddScoped<IDishCommand, DishCommand>();
             services.AddScoped<IDishQuery, DishQuery>();
             services.AddScoped<ICategoryQuery, CategoryQuery>();
+            services.AddScoped<IDeliveryTypeQuery, DeliveryTypeQuery>();
+            services.AddScoped<IStatusQuery, StatusQuery>();
 
             return services;
         }

@@ -14,7 +14,7 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Category>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var query = _context.Categories.AsQueryable();
             return await query.ToListAsync();
