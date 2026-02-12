@@ -14,7 +14,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(deliveryType => deliveryType.Name)
                 .IsRequired()
-                .HasMaxLength(25);
+                .HasMaxLength(DeliveryTypeContraints.NameMaxLength);
 
             builder.HasData(
                 new DeliveryType { Id = DeliveryTypeIds.Delivery, Name = DeliveryTypeNames.Delivery },

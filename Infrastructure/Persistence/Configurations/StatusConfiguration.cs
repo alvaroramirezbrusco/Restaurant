@@ -14,7 +14,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(status => status.Name)
                 .IsRequired()
-                .HasMaxLength(25);
+                .HasMaxLength(StatusContraints.NameMaxLength);
 
             builder.HasData(
                 new Status { Id = StatusIds.Pending, Name = StatusNames.Pending },

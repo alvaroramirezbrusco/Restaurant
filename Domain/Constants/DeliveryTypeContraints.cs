@@ -1,5 +1,9 @@
 ﻿namespace Domain.Constants
 {
+    public static class DeliveryTypeContraints
+    {
+        public const int NameMaxLength = 25;
+    }
     public static class DeliveryTypeIds
     {
         public const int Delivery = 1;

@@ -1,5 +1,9 @@
 ﻿namespace Domain.Constants
 {
+    public static class StatusContraints
+    {
+        public const int NameMaxLength = 25;
+    }
     public static class StatusIds
     {
         public const int Pending = 1;

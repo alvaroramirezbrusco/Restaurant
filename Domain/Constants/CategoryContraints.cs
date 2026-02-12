@@ -1,5 +1,10 @@
 ﻿namespace Domain.Constants
 {
+    public static class CategoryContraints
+    {
+        public const int NameMaxLength = 25;
+        public const int DescriptionMaxLength = 255;
+    }
     public static class CategoryIds
     {
         public const int Entradas = 1;

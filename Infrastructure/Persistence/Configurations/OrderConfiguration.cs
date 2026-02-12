@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,7 +17,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(order => order.DeliveryTo)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(OrderContraints.DeliveryToMaxLength);
 
             builder.Property(order => order.Notes)
                 .IsRequired()

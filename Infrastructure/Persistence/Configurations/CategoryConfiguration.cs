@@ -14,11 +14,11 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(category => category.Name)
                 .IsRequired()
-                .HasMaxLength(25);
+                .HasMaxLength(CategoryContraints.NameMaxLength);
 
             builder.Property(category => category.Description)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(CategoryContraints.DescriptionMaxLength);
 
             builder.Property(category => category.Order)
                 .IsRequired()

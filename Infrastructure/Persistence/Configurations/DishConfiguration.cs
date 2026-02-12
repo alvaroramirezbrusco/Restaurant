@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +14,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(dish => dish.Name)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(DishConstraints.NameMaxLength);
 
             builder.HasIndex(dish => dish.Name)
                 .IsUnique();
