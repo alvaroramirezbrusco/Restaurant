@@ -1,4 +1,5 @@
-﻿using Application.Models.Responses;
+﻿using Application.Models.Requests;
+using Application.Models.Responses;
 using AutoMapper;
 using Domain.Entities;
 
@@ -40,6 +41,40 @@ namespace Application.Mapping.Orders
                         Image = item.DishNavigator.ImageUrl
                     }
                 }).ToList()));
+
+            CreateMap<Order, OrderCreateReponse>()
+                .ForMember(dest => dest.OrderNumber, opt => opt.MapFrom(src => src.OrderId))
+                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Price))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreateDate));
+
+            CreateMap<OrderRequest, Order>()
+                .ForMember(dest => dest.OrderId, opt => opt.Ignore())
+                .ForMember(dest => dest.Price, opt => opt.Ignore())
+                .ForMember(dest => dest.OverallStatus, opt => opt.MapFrom(_ => 1))
+                .ForMember(dest => dest.OverallStatusNavigation, opt => opt.Ignore())
+                .ForMember(dest => dest.DeliveryTypeNavigator, opt => opt.Ignore())
+
+                .ForMember(dest => dest.DeliveryType, opt => opt.MapFrom(src => src.Delivery.Id))
+                .ForMember(dest => dest.DeliveryTo, opt => opt.MapFrom(src => src.Delivery.To))
+                
+                .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes))
+                
+                .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.Items));
+
+            CreateMap<Items, OrderItem>()
+                .ForMember(dest => dest.OrderItemId, opt => opt.Ignore())
+                .ForMember(dest => dest.OrderNavigator, opt => opt.Ignore())
+                .ForMember(dest => dest.Order, opt => opt.Ignore())
+                .ForMember(dest => dest.DishNavigator, opt => opt.Ignore())
+                .ForMember(dest => dest.StatusNavigator, opt => opt.Ignore())
+
+                .ForMember(dest => dest.Dish, opt => opt.MapFrom(src => src.Id))
+
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+
+                .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes))
+
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(_ => 1));
         }
     }
 }

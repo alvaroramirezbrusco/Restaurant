@@ -65,5 +65,13 @@ namespace Infrastructure.Queries
                 .FirstOrDefaultAsync(dish => dish.DishId == id, cancellationToken);
         }
 
+        public async Task<IReadOnlyList<Dish>> GetDishesByIdAsync(List<Guid> dishIds, CancellationToken cancellationToken = default)
+        {
+            return await _context.Dishes
+                .AsNoTracking()
+                .Where(d => dishIds.Contains(d.DishId))
+                .ToListAsync();
+        }
+
     }
 }

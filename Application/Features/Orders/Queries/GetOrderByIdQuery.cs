@@ -3,5 +3,5 @@ using MediatR;
 
 namespace Application.Features.Orders.Queries
 {
-    public record GetOrderByIdQuery(long id) : IRequest<OrderDetailsResponse>
+    public record GetOrderByIdQuery(long id) : IRequest<OrderDetailsResponse>;
 }

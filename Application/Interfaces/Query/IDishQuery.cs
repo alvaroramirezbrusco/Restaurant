@@ -9,5 +9,6 @@ namespace Application.Interfaces.Query
         Task<Dish> ExistsWithNameAsync(string name, CancellationToken cancellationToken = default);
         Task<bool> ExistsOtherWithNameAsync(string name, Guid dishId, CancellationToken cancellationToken = default);
         Task<Dish?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<Dish>> GetDishesByIdAsync(List<Guid> dishIds, CancellationToken cancellationToken = default);
     }
 }
