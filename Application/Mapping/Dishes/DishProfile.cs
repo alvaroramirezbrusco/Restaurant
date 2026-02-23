@@ -25,15 +25,14 @@ namespace Application.Mapping.Dishes
                 .ForMember(dest => dest.DishId, opt => opt.Ignore())
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Image))
                 .ForMember(dest => dest.Available, opt => opt.MapFrom(_ => true))
-                .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(_ => DateTime.UtcNow))
-                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(_ => DateTime.UtcNow));
+                .ForMember(dest => dest.CategoryNavigator, opt => opt.Ignore());
 
             CreateMap<DishUpdateRequest, Dish>()
                 .ForMember(dest => dest.DishId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreateDate, opt => opt.Ignore())
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Image))
                 .ForMember(dest => dest.Available, opt => opt.MapFrom(src => src.IsActive))
-                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(_ => DateTime.UtcNow));
+                .ForMember(dest => dest.CategoryNavigator, opt => opt.Ignore());
         }
     }
 }

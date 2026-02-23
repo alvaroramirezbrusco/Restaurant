@@ -41,7 +41,8 @@ namespace Application.Features.Dishes.Commands
             }
 
             _mapper.Map(request.request, existingDish);
-            existingDish.CategoryNavigator = existingCategory;
+
+            existingDish.UpdateDate = DateTime.UtcNow;
 
             await _dishCommand.UpdateAsync(existingDish, cancellationToken);
 

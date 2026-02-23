@@ -36,5 +36,14 @@ namespace Restaurant.Controllers
             var result = await _mediator.Send(new GetOrderByIdQuery(id));
             return Ok(result);
         }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(OrderDetailsResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] int? status)
+        {
+            var result = await _mediator.Send(new GetAllOrdersQuery(from, to, status));
+            return Ok(result);
+        }
     }
 }

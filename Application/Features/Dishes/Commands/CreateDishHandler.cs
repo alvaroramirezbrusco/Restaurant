@@ -45,7 +45,8 @@ namespace Application.Features.Dishes.Commands
 
             await _dishCommand.InsertAsync(dish);
 
-            dish.CategoryNavigator = category;
+            dish.CreateDate = DateTime.UtcNow;
+            dish.UpdateDate = DateTime.UtcNow;
 
             return _mapper.Map<DishResponse>(dish);
         }

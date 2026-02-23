@@ -13,5 +13,15 @@ namespace Application.Validators.Extensions
                 .GreaterThan(0)
                 .WithMessage("Debe especificar un tipo de entrega válido");
         }
+
+        public static IRuleBuilderOptions<T, int> ValidStatus<T>(
+            this IRuleBuilder<T, int> rule)
+        {
+            return rule
+                .NotEmpty()
+                .WithMessage("El estado especificado no es válido")
+                .GreaterThan(0)
+                .WithMessage("El estado especificado no es válido");
+        }
     }
 }

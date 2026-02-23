@@ -14,6 +14,32 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
+        public async Task<IReadOnlyList<Order>> GetAllAsync(DateTime? from, DateTime? to, int? status, CancellationToken cancellation = default)
+        {
+            var query = _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.DishNavigator)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.StatusNavigator)
+                .Include(o => o.OverallStatusNavigation)
+                .Include(o => o.DeliveryTypeNavigator)
+                .AsQueryable();
+
+            if (from.HasValue)
+            {
+                query = query.Where(o => o.CreateDate >= from);
+            }
+            if (to.HasValue)
+            {
+                query = query.Where(o => o.CreateDate <= to);
+            }
+            if (status.HasValue)
+            {
+                query = query.Where(o => o.OverallStatus == status.Value);
+            }
+            return await query.ToListAsync();
+        }
+
         public async Task<Order> GetByIdAsync(long id, CancellationToken cancellationToken = default)
         {
             return await _context.Orders
