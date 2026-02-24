@@ -45,5 +45,15 @@ namespace Restaurant.Controllers
             var result = await _mediator.Send(new GetAllOrdersQuery(from, to, status));
             return Ok(result);
         }
+
+        [HttpPatch("{id}/item/{itemId}")]
+        [ProducesResponseType(typeof(OrderUpdateReponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateStatus(long id, long itemId, [FromBody] OrderItemUpdateRequest request)
+        {
+            var result = await _mediator.Send(new UpdateOrderItemCommand(id, itemId, request));
+            return Ok(result);
+        }
     }
 }

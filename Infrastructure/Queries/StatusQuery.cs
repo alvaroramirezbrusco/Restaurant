@@ -19,5 +19,12 @@ namespace Infrastructure.Queries
             var query = _context.Statuses.AsQueryable();
             return await query.ToListAsync();
         }
+
+        public async Task<Status> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Statuses
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        }
     }
 }

@@ -47,6 +47,11 @@ namespace Application.Mapping.Orders
                 .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Price))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreateDate));
 
+            CreateMap<Order, OrderUpdateReponse>()
+                .ForMember(dest => dest.OrderNumber, opt => opt.MapFrom(src => src.OrderId))
+                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Price))
+                .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => src.UpdateDate));
+
             CreateMap<OrderRequest, Order>()
                 .ForMember(dest => dest.OrderId, opt => opt.Ignore())
                 .ForMember(dest => dest.Price, opt => opt.Ignore())
