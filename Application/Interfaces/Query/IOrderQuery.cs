@@ -6,5 +6,6 @@ namespace Application.Interfaces.Query
     {
         Task<IReadOnlyList<Order>> GetAllAsync(DateTime? from, DateTime? to, int? status, CancellationToken cancellation = default);
         Task<Order> GetByIdAsync(long id, CancellationToken cancellationToken = default);
+        Task<bool> IsDishInActiveOrder(Guid id, CancellationToken cancellationToken = default);
     }
 }

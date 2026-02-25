@@ -59,5 +59,15 @@ namespace Restaurant.Controllers
             var result = await _mediator.Send(new UpdateDishCommand(id, request));
             return Ok(result);
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(DishResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _mediator.Send(new DeleteDishCommand(id));
+            return Ok(result);
+        }
     }
 }

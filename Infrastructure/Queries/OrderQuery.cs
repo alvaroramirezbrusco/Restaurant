@@ -51,5 +51,11 @@ namespace Infrastructure.Queries
                     .ThenInclude(oi => oi.StatusNavigator)
                   .FirstOrDefaultAsync(o => o.OrderId == id);
         }
+
+        public async Task<bool> IsDishInActiveOrder(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Orders
+                .AnyAsync(o => o.OrderItems.Any(oi => oi.Dish == id));
+        }
     }
 }

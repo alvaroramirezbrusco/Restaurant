@@ -15,7 +15,8 @@ namespace Infrastructure.Commands
 
         public async Task DeleteAsync(Dish entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _context.Dishes.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task InsertAsync(Dish entity, CancellationToken cancellationToken = default)
