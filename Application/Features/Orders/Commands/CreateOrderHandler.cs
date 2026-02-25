@@ -59,7 +59,7 @@ namespace Application.Features.Orders.Commands
                 item.CreateDate = DateTime.UtcNow;
             }
 
-            await _orderCommand.InsertAsync(order);
+            await _orderCommand.InsertAsync(order, cancellationToken);
 
             return _mapper.Map<OrderCreateReponse>(order);
         }

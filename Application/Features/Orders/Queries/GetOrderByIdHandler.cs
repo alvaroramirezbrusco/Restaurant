@@ -20,7 +20,7 @@ namespace Application.Features.Orders.Queries
 
         public async Task<OrderDetailsResponse> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
         {
-            var order = await _orderQuery.GetByIdAsync(request.id);
+            var order = await _orderQuery.GetByIdAsync(request.id, cancellationToken);
             if (order == null)
             {
                 throw new KeyNotFoundException("Orden no encontrada");

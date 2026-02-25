@@ -53,7 +53,7 @@ namespace Application.Features.Orders.Commands
 
             order.UpdateDate = DateTime.UtcNow;
 
-            await _orderCommand.UpdateOrder(order);
+            await _orderCommand.UpdateAsync(order, cancellationToken);
 
             return _mapper.Map<OrderUpdateReponse>(order);
         }

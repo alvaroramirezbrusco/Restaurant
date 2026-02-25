@@ -43,7 +43,7 @@ namespace Application.Features.Dishes.Commands
 
             var dish = _mapper.Map<Dish>(request.request);
 
-            await _dishCommand.InsertAsync(dish);
+            await _dishCommand.InsertAsync(dish, cancellationToken);
 
             dish.CreateDate = DateTime.UtcNow;
             dish.UpdateDate = DateTime.UtcNow;

@@ -20,7 +20,7 @@ namespace Application.Features.Dishes.Queries
 
         public async Task<DishResponse> Handle(GetDishByIdQuery request, CancellationToken cancellationToken)
         {
-            var dish = await _dishQuery.GetByIdAsync(request.id);
+            var dish = await _dishQuery.GetByIdAsync(request.id, cancellationToken);
             if (dish == null)
             {
                 throw new KeyNotFoundException("Plato no encontrado");

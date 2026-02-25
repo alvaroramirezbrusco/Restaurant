@@ -1,4 +1,5 @@
-﻿using Application.Features.Orders.Commands;
+﻿using Application.Features.Dishes.Commands;
+using Application.Features.Orders.Commands;
 using Application.Features.Orders.Queries;
 using Application.Models.Requests;
 using Application.Models.Responses;
@@ -53,6 +54,16 @@ namespace Restaurant.Controllers
         public async Task<IActionResult> UpdateStatus(long id, long itemId, [FromBody] OrderItemUpdateRequest request)
         {
             var result = await _mediator.Send(new UpdateOrderItemCommand(id, itemId, request));
+            return Ok(result);
+        }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(OrderUpdateReponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update(long id, [FromBody] OrderUpdateRequest request)
+        {
+            var result = await _mediator.Send(new UpdateOrderCommand(id, request));
             return Ok(result);
         }
     }

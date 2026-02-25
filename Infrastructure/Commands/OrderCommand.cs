@@ -19,7 +19,7 @@ namespace Infrastructure.Commands
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateOrder(Order entity, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(Order entity, CancellationToken cancellationToken = default)
         {
             _context.Orders.Update(entity);
             await _context.SaveChangesAsync();
