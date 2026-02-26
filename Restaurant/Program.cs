@@ -14,6 +14,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://127.0.0.1:5500")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -41,6 +51,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
